@@ -20,17 +20,12 @@
 
 ## Установка
 
-1. Клонируйте репозиторий:
-   ```bash
-   git clone https://github.com/ваш-логин/ваш-репозиторий.git
-   cd ваш-репозиторий
-   ```
-2. Настройте базу данных PostgreSQL:
+1. Настройте базу данных PostgreSQL:
 
 - **создайте базу данных, например lesson12**
 - **настройте пользователя и пароль**
 
-3. Настройте файл liquibase.properties: В папке src/main/resources создайте или отредактируйте файл liquibase.properties:
+2. Настройте файл liquibase.properties: В папке src/main/resources создайте или отредактируйте файл liquibase.properties:
 ```properties
 changeLogFile=db/changelog/master.xml
 url=jdbc:postgresql://localhost:5432/lesson12
@@ -38,7 +33,7 @@ username=ваш_пользователь
 password=ваш_пароль
 driver=org.postgresql.Driver
 ```
-4. Установите зависимости и скомпилируйте проект:
+3. Установите зависимости и скомпилируйте проект:
 ```bash
 mvn clean compile
 ```
