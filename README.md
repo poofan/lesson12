@@ -13,7 +13,8 @@
 ## Установка
 Склонируйте репозиторий:
 
-``bash
+``
+bash
 git clone https://github.com/<ваш_профиль>/weather-app.git
 cd weather-app
 ``
