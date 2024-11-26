@@ -57,7 +57,7 @@ mvn test
 
 - Убедитесь, что тестовые классы находятся в папке src/test/java.
 - Запустите тесты WeatherCacheTest из вашей IDE (например, в IntelliJ IDEA или Eclipse).
-##Структура проекта
+## Структура проекта
 ``css
 weather-app
 ├── src
