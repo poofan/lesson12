@@ -1,79 +1,103 @@
-# Проект Students Repository
+# Weather App
+## Описание
+Этот проект реализует клиент-серверную архитектуру для получения информации о погоде. Основные компоненты включают:
 
-Этот проект демонстрирует реализацию репозитория `StudentsRepository` с базовыми CRUD-операциями для управления данными студентов с использованием реляционной базы данных и версионирования схемы через Liquibase.
-
-## Возможности
-
-- CRUD-операции для работы с данными студентов.
-- Версионирование схемы базы данных с использованием Liquibase.
-- Покрытие тестами с использованием JUnit.
-- Совместимость с PostgreSQL (можно настроить другую базу данных).
-
-## Предварительные требования
-
-Перед началом работы убедитесь, что у вас установлены:
-
-- **Java 17+**
-- **Maven 3.8+**
-- **PostgreSQL** (или другая поддерживаемая база данных)
-- **Git** (опционально, для клонирования репозитория)
-
+1. **WeatherProvider:** Загружает данные о погоде из API OpenWeatherMap.
+2. **WeatherCache:** Потокобезопасный кеш, сохраняющий данные о погоде с периодом актуальности 5 минут.
+3. **Юнит-тесты** для проверки работы WeatherCache с использованием Mockito.
+## Требования
+- **Java 17**
+- **Maven**
+- **Интернет-соединение для запросов к API OpenWeatherMap**
+- **API-ключ OpenWeatherMap (зарегистрируйтесь на OpenWeatherMap для получения ключа)**
 ## Установка
+Склонируйте репозиторий:
 
-1. Настройте базу данных PostgreSQL:
+``bash
+git clone https://github.com/<ваш_профиль>/weather-app.git
+cd weather-app
+``
+## Добавьте API-ключ в WeatherProvider:
 
-- **создайте базу данных, например lesson12**
-- **настройте пользователя и пароль**
+**1.** Откройте файл WeatherProvider.java.
+**2.** Вставьте ваш API-ключ в поле private final String apiKey = "YOUR_API_KEY";.
+## Соберите проект:
 
-2. Настройте файл liquibase.properties: В папке src/main/resources создайте или отредактируйте файл liquibase.properties:
-```properties
-changeLogFile=db/changelog/master.xml
-url=jdbc:postgresql://localhost:5432/lesson12
-username=ваш_пользователь
-password=ваш_пароль
-driver=org.postgresql.Driver
-```
-3. Установите зависимости и скомпилируйте проект:
-```bash
-mvn clean compile
-```
+``bash
+mvn clean install
+``
+## Запуск
+**1.** Запуск основного приложения
+На данном этапе приложение не имеет интерфейса, но вы можете протестировать работу классов в отдельном main-методе. Пример:
 
-## Запуск миграций базы данных
-Для применения изменений схемы базы данных выполните:
-```bash
-mvn liquibase:update
-```
-Команда выполнит все миграции, описанные в master.xml, и создаст таблицы в базе данных.
+``java
+public class Main {
+    public static void main(String[] args) {
+        WeatherProvider provider = new WeatherProvider();
+        WeatherCache cache = new WeatherCache(provider);
+        WeatherInfo info = cache.getWeatherInfo(Moscow);
+        if (info != null) {
+            System.out.println(info);
+        } else {
+            System.out.println("Weather data not found.");
+        }
+    }
+}
+``
+**2.** Скомпилируйте и запустите Main из вашей IDE.
 
 ## Запуск тестов
-Для выполнения тестов убедитесь, что база данных настроена, а затем выполните:
-```bash
-mvn test
-```
+Выполните все тесты с помощью Maven:
 
-## Структура проекта
-- **src/main/java** — исходный код приложения.
-- **src/main/resources** — ресурсы, включая файлы миграций Liquibase.
-- **src/test/java** — тесты для покрытия логики приложения.
-  
-## Основные команды Maven
-Компиляция проекта:
-```bash
-mvn clean compile
-```
-Применение миграций:
-```bash
-mvn liquibase:update
-```
-Проверка состояния базы данных:
-```bash
-mvn liquibase:status
-```
-Выполнение тестов:
-```bash
+``bash
 mvn test
-```
-Откат последней миграции:
-```bash
-mvn liquibase:rollback -Dliquibase.rollbackCount=1
-```
+``
+## Запуск тестов из IDE:
+
+- Убедитесь, что тестовые классы находятся в папке src/test/java.
+- Запустите тесты WeatherCacheTest из вашей IDE (например, в IntelliJ IDEA или Eclipse).
+##Структура проекта
+``css
+weather-app
+├── src
+│   ├── main
+│   │   ├── java
+│   │   │   └── homework142
+│   │   │       ├── WeatherCache.java
+│   │   │       ├── WeatherInfo.java
+│   │   │       ├── WeatherProvider.java
+│   │   │       └── Main.java
+│   └── test
+│       ├── java
+│       │   └── homework142
+│       │       └── WeatherCacheTest.java
+├── pom.xml
+└── README.md
+``
+##Технологии
+- **Java 17:** Основной язык разработки.
+- **Spring RestTemplate:** Для выполнения HTTP-запросов.
+- **JUnit 5:** Для модульного тестирования.
+- **Mockito:** Для мокирования зависимостей.
+## Примеры тестов
+Тесты покрывают следующие сценарии:
+
+**1.** Загрузка новой информации в кеш, когда данные отсутствуют.
+**2.** Получение актуальной информации из кеша без запроса к интернету.
+**3.** Обновление данных в кеше, если информация устарела.
+**4.** бработка запроса для несуществующего города.
+##Пример теста:
+
+``java
+@Test
+void testLoadWeatherInfoFromProvider() {
+    WeatherInfo mockInfo = new WeatherInfo.Builder()
+            .setCity("Moscow")
+            .setExpiryTime(LocalDateTime.now().plusMinutes(5))
+            .build();
+    when(mockProvider.get("Moscow")).thenReturn(mockInfo);
+    WeatherInfo result = weatherCache.getWeatherInfo("Moscow");
+    assertEquals(mockInfo, result);
+    verify(mockProvider, times(1)).get("Moscow");
+}
+``
