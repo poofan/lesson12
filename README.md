@@ -13,25 +13,24 @@
 ## Установка
 Склонируйте репозиторий:
 
-``
-bash
+```bash
 git clone https://github.com/<ваш_профиль>/weather-app.git
 cd weather-app
-``
+```
 ## Добавьте API-ключ в WeatherProvider:
 
 **1.** Откройте файл WeatherProvider.java.
 **2.** Вставьте ваш API-ключ в поле private final String apiKey = "YOUR_API_KEY";.
 ## Соберите проект:
 
-``bash
+```bash
 mvn clean install
-``
+```
 ## Запуск
 **1.** Запуск основного приложения
 На данном этапе приложение не имеет интерфейса, но вы можете протестировать работу классов в отдельном main-методе. Пример:
 
-``java
+```java
 public class Main {
     public static void main(String[] args) {
         WeatherProvider provider = new WeatherProvider();
@@ -44,21 +43,21 @@ public class Main {
         }
     }
 }
-``
+```
 **2.** Скомпилируйте и запустите Main из вашей IDE.
 
 ## Запуск тестов
 Выполните все тесты с помощью Maven:
 
-``bash
+```bash
 mvn test
-``
+```
 ## Запуск тестов из IDE:
 
 - Убедитесь, что тестовые классы находятся в папке src/test/java.
 - Запустите тесты WeatherCacheTest из вашей IDE (например, в IntelliJ IDEA или Eclipse).
 ## Структура проекта
-``css
+```css
 weather-app
 ├── src
 │   ├── main
@@ -74,7 +73,7 @@ weather-app
 │       │       └── WeatherCacheTest.java
 ├── pom.xml
 └── README.md
-``
+```
 ## Технологии
 - **Java 17:** Основной язык разработки.
 - **Spring RestTemplate:** Для выполнения HTTP-запросов.
@@ -89,7 +88,7 @@ weather-app
 **4.** бработка запроса для несуществующего города.
 ## Пример теста:
 
-``java
+```java
 @Test
 void testLoadWeatherInfoFromProvider() {
     WeatherInfo mockInfo = new WeatherInfo.Builder()
@@ -101,4 +100,4 @@ void testLoadWeatherInfoFromProvider() {
     assertEquals(mockInfo, result);
     verify(mockProvider, times(1)).get("Moscow");
 }
-``
+```
